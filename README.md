@@ -36,6 +36,19 @@ $ flask run
 
 This will start the local server in port 5000. 
 
+## Project structure
+
+    omg-frames-api
+    ├── app
+    |   ├── __init__.py
+    │   └── routes.py
+    ├── config.py
+    ├── db.py
+    ├── README.md
+    ├── requirements.txt
+    ├── sample.env
+    └── server.py
+
 ## API Endpoints
 
 
