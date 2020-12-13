@@ -2,3 +2,4 @@ Flask==1.1.2
 passlib==1.7.4
 PyJWT==1.7.1
 Pyrebase==3.0.27
+python-dotenv==0.15.0
