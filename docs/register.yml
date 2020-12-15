@@ -1,0 +1,60 @@
+Registration of user
+The userdetails provided in the request body will be added to the database.
+---
+tags:
+  - user
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      required:
+        - name
+        - email
+        - password
+      properties:
+        name:
+          type: string
+          description: Name of the participant
+        email:
+          type: string
+          description: Email address of the participant
+        password:
+          type: string
+          description: Strong password (must have 7 characters or more)
+responses:
+  "201":
+    description: User Account was created successfully
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: string
+              enum: ["success", "fail"]
+            message:
+              type: string
+              example: User added to database
+  "409":
+    description: User details provided are invalid ( or User already exits )
+  "500":
+    description: Internal Server Error
+definitions:
+  User:
+    type: object
+    properties:
+      name:
+        type: string
+        description: Name of the participant
+      email:
+        type: string
+        description: Email address of the participant
+      password:
+        type: string
+        description: Strong password (must have 7 characters or more)
+      frames:
+        type: array
+        description: Base64 encoded images of the frames
+        items:
+          type: string

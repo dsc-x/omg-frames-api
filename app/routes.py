@@ -1,5 +1,6 @@
 from flask import request, jsonify, make_response, abort
 from app import app, Db
+from flasgger.utils import swag_from
 
 BASE_URL = '/api/v1'
 
@@ -12,6 +13,7 @@ def index():
 
 
 @app.route(BASE_URL+'/register', methods=['POST'])
+@swag_from('../docs/register.yml')
 def register():
     user = request.json
     if not Db.check_valid_details(database, user):
@@ -23,6 +25,7 @@ def register():
 
 
 @app.route(BASE_URL+'/login', methods=['POST'])
+@swag_from('../docs/login.yml')
 def login():
     user = request.json
     user_id = Db.authorise_participants(database, user)

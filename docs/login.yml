@@ -1,0 +1,35 @@
+Login/Sign In of user
+Verification of email and password, and token will be generated if successful
+---
+tags:
+  - user
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          description: Email address of the participant
+        password:
+          type: string
+          description: Strong password (must have 7 characters or more)
+responses:
+  "202":
+    description: User Login was successful
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: string
+              enum: ["success", "fail"]
+            token:
+              type: string
+  "401":
+    description: User Login failed

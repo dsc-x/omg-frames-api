@@ -1,8 +1,9 @@
 from config import Config, FirebaseConfig
 from passlib.hash import pbkdf2_sha256
 import pyrebase
-import jwt 
+import jwt
 import datetime
+
 
 def encode_auth_token(user_id):
     try:
@@ -19,16 +20,18 @@ def encode_auth_token(user_id):
     except Exception as e:
         return e
 
+
 def decode_auth_token(auth_token):
     try:
         payload = jwt.decode(auth_token, Config.SECRET_KEY)
         return payload['id']
     except jwt.ExpiredSignatureError:
         print('ERROR: Signature expired. Please log in again.')
-        return None;
+        return None
     except jwt.InvalidTokenError:
         print('ERROR: Invalid token. Please log in again.')
-        return None;
+        return None
+
 
 class Db:
     @staticmethod
@@ -37,31 +40,32 @@ class Db:
         db = firebase.database()
         if db:
             print(' * Database connected successfully')
-        
+
         return db
-        
+
     @staticmethod
     def add_participants(db, userDetails):
         try:
             user = {
-                "name":userDetails["name"],
-                "email":userDetails["email"],
-                "password":pbkdf2_sha256.hash(userDetails["password"]), #storing the password as hash
-                "frames":[]
+                "name": userDetails["name"],
+                "email": userDetails["email"],
+                # storing the password as hash
+                "password": pbkdf2_sha256.hash(userDetails["password"]),
+                "frames": []
             }
             db.child('participants').push(user)
             print(' * Participant added to db')
             return True
         except Exception as e:
-            print('ERROR: add_participants', e)
+            print('ERROR:', e)
             return False
-    
+
     @staticmethod
     def check_valid_details(db, userDetails):
         try:
-            assert len(userDetails["name"])>0
-            assert len(userDetails["email"])>0
-            assert len(userDetails["password"])>6
+            assert len(userDetails["name"]) > 0
+            assert len(userDetails["email"]) > 0
+            assert len(userDetails["password"]) > 6
 
             participants = db.child('participants').get().val()
             for user_id in participants:
@@ -71,7 +75,7 @@ class Db:
                     return False
             return True
         except Exception as e:
-            print('ERROR: authorise_participants', e)
+            print('ERROR:', e)
             return False
 
     @staticmethod
@@ -84,16 +88,16 @@ class Db:
                     return user_id
             return None
         except Exception as e:
-            print('ERROR: authorise_participants', e)
+            print('ERROR:', e)
             return None
 
     @staticmethod
     def get_token(db, user_id):
         try:
-            token=encode_auth_token(user_id)
+            token = encode_auth_token(user_id)
             return token.decode('UTF-8')
         except Exception as e:
-            print('ERROR: get_token', e)
+            print('ERROR:', e)
             return None
 
     @staticmethod
@@ -111,8 +115,9 @@ class Db:
     def get_frames(db, token):
         try:
             user_id = decode_auth_token(token)
-            frames = db.child('participants').child(user_id).child('frames').get().val()
-            frame_arr = [ frames[fid] for fid in frames ]
+            frames = db.child('participants').child(
+                user_id).child('frames').get().val()
+            frame_arr = [frames[fid] for fid in frames]
             return frame_arr
         except Exception as e:
             print('ERROR: ', e)
