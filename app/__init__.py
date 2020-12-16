@@ -18,6 +18,9 @@ template = {
     "http",
     "https"
   ],
+  'securityDefinitions': { 
+    'basicAuth': { 'type': 'apiKey', 'name': 'Authorization', 'in': 'header'}
+  }
 }
 
 

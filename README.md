@@ -38,23 +38,25 @@ This will start the local server in port 5000.
 
 ## Project structure
 
+```
     omg-frames-api
+    .
     ├── app
-    |   ├── __init__.py
-    │   └── routes.py
+    │   ├── db.py
+    │   ├── __init__.py
+    │   └── routes.py
     ├── config.py
-    ├── db.py
+    ├── docs
+    │   ├── getframes.yml
+    │   ├── login.yml
+    │   ├── postframes.yml
+    │   └── register.yml
     ├── README.md
     ├── requirements.txt
     ├── sample.env
     └── server.py
+```
 
 ## API Endpoints
 
-
-| URL | METHOD | REQUEST BODY | RESPONSE | DESCRIPTION |
-|---|---|---|---|---|
-| `/register` | POST | JSON that has three field `name`, `email`, `password`. | - | If the email is not in the database then the email will be added with the password hashed. |
-| `/login` | POST | JSON with `email` and `password` | JSON with a key `token` | Returns a `token` if the email and password matches else `401` |
-
->add `/api/v1` as prefix to the URL
+For API documentation go to `/apidocs` after running the app. It is built using Swagger. 

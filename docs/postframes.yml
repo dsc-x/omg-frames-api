@@ -1,0 +1,25 @@
+Add (Save) frames of an user
+Request body should have the base64 encoded frame along with the Bearer Token, which will be verified and added to the database.
+---
+tags:
+  - user
+security:
+  - basicAuth: []
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      required:
+        - frame
+      properties:
+        frame:
+          type: string
+          description: Base 64 encoded data of the frame
+responses:
+  "200":
+    description: Frame added successfully
+    schema:
+      $ref: '#/definitions/Frames'
+  "401":
+    description: Access token is missing or invalid

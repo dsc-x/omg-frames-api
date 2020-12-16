@@ -36,9 +36,10 @@ def login():
 
 
 @app.route(BASE_URL+'/frames', methods=['POST', 'GET'])
+@swag_from('../docs/getframes.yml', methods=['GET'])
+@swag_from('../docs/postframes.yml', methods=['POST'])
 def frames():
     auth_header = request.headers.get('Authorization')
-    
     if auth_header:
         try:
             auth_token = auth_header.split(" ")[1]

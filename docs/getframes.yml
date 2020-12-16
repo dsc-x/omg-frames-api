@@ -1,0 +1,21 @@
+Get the saved frames of the user
+An array of all the frames are given as a reponse provided the Bearer Token is correct. 
+---
+tags:
+  - user
+security:
+  - basicAuth: []
+responses:
+  "201":
+    description: Frames were fetched successfully
+    schema:
+      $ref: '#/definitions/Frames'
+    
+  "401":
+    description: Access token is missing or invalid
+definitions:
+  Frames:
+    type: array
+    description: Array of Base64 encoded frames.
+    items:
+      type: string

@@ -117,7 +117,9 @@ class Db:
             user_id = decode_auth_token(token)
             frames = db.child('participants').child(
                 user_id).child('frames').get().val()
-            frame_arr = [frames[fid] for fid in frames]
+            frame_arr = []
+            if frames!= None:
+                frame_arr = [frames[fid] for fid in frames]
             return frame_arr
         except Exception as e:
             print('ERROR: ', e)
