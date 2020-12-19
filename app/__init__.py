@@ -2,6 +2,7 @@ from flask import Flask
 from config import Config
 from app.db import Db
 from flasgger import Swagger
+from flask_cors import CORS
 
 template = {
   "swagger": "2.0",
@@ -25,6 +26,7 @@ template = {
 
 
 app = Flask(__name__)
+CORS(app)
 app.config.from_object(Config)
 
 swagger = Swagger(app, template=template)
