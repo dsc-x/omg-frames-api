@@ -104,9 +104,13 @@ class Db:
     def save_frame(db, token, frame):
         try:
             user_id = decode_auth_token(token)
-            db.child('participants').child(user_id).child('frames').push(frame)
-            print('* Frame added successfully')
-            return True
+            if user_id!= None:
+                db.child('participants').child(user_id).child('frames').push(frame)
+                print('* Frame added successfully')
+                return True
+            else:
+                print('ERROR: Token Value is None')
+                return False
         except Exception as e:
             print('ERROR: ', e)
             return False

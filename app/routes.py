@@ -7,9 +7,9 @@ BASE_URL = '/api/v1'
 database = Db.init_db()
 
 
-@app.route('/')
+@app.route(BASE_URL+'/')
 def index():
-    return '<h1>OMG Frames</h1>'
+    return '<h1>DSC-X Frames</h1>'
 
 
 @app.route(BASE_URL+'/register', methods=['POST'])
