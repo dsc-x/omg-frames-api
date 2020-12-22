@@ -29,8 +29,9 @@ def register():
 def login():
     user = request.json
     user_id = Db.authorise_participants(database, user)
+    user_token=Db.get_token(database, user_id)
     if (user_id != None):
-        return make_response(jsonify({"status": "success", "token": Db.get_token(database, user_id)})), 202
+        return make_response(jsonify({"status": "success", "token": user_token})), 202
     else:
         return make_response(jsonify({"status": "fail", "message": "Login failed"})), 401
 
