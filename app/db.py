@@ -105,8 +105,43 @@ class Db:
         try:
             user_id = decode_auth_token(token)
             if user_id!= None:
-                db.child('participants').child(user_id).child('frames').push(frame)
+                frame_id = db.child('participants').child(user_id).child('frames').push(frame)
+                frame_obj={
+                    "frame_data": frame,
+                    "frame_id": frame_id["name"]
+                }
                 print('* Frame added successfully')
+                return frame_obj
+            else:
+                print('ERROR: Token Value is None')
+                return None
+        except Exception as e:
+            print('ERROR: ', e)
+            return None
+
+    @staticmethod
+    def get_frames(db, token):
+        try:
+            user_id = decode_auth_token(token)
+            if user_id != None:
+                frames = db.child('participants').child(user_id).child('frames').get().val()
+                frame_arr = []
+                if frames!= None:
+                    frame_arr = [{"frame_id":fid, "frame_data":frames[fid]} for fid in frames]
+                return frame_arr
+            else:
+                print('ERROR: Token Value is None')
+                return None
+        except Exception as e:
+            print('ERROR: ', e)
+            return None
+
+    @staticmethod
+    def delete_frames(db, token, frame_id):
+        try:
+            user_id = decode_auth_token(token)
+            if user_id != None:
+                db.child('participants').child(user_id).child('frames').child(frame_id).remove()
                 return True
             else:
                 print('ERROR: Token Value is None')
@@ -114,17 +149,3 @@ class Db:
         except Exception as e:
             print('ERROR: ', e)
             return False
-
-    @staticmethod
-    def get_frames(db, token):
-        try:
-            user_id = decode_auth_token(token)
-            frames = db.child('participants').child(
-                user_id).child('frames').get().val()
-            frame_arr = []
-            if frames!= None:
-                frame_arr = [frames[fid] for fid in frames]
-            return frame_arr
-        except Exception as e:
-            print('ERROR: ', e)
-            return None
