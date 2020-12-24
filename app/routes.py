@@ -9,7 +9,7 @@ database = Db.init_db()
 
 @app.route(BASE_URL+'/')
 def index():
-    return '<h1>DSC-X Frames</h1>'
+    return make_response(jsonify({"message": "DSC Frames API"})), 201
 
 
 @app.route(BASE_URL+'/register', methods=['POST'])
