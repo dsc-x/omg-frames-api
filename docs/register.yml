@@ -54,7 +54,4 @@ definitions:
         type: string
         description: Strong password (must have 7 characters or more)
       frames:
-        type: array
-        description: Base64 encoded images of the frames
-        items:
-          type: string
+        $ref: '#/definitions/Frames'

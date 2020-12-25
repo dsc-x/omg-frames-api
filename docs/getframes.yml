@@ -16,6 +16,13 @@ responses:
 definitions:
   Frames:
     type: array
-    description: Array of Base64 encoded frames.
+    description: Array of Frame object
     items:
-      type: string
+      type: object
+      properties:
+        frame_id:
+          type: string
+          description: Reference Id of the frame
+        frame_data:
+          type: string
+          description: Base64 encoded data of the frame
