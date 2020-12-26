@@ -24,7 +24,7 @@ responses:
   "201":
     description: Frame was updated successfully
     schema:
-      $ref: '#/definitions/Frames'
+      $ref: '#/definitions/FrameObject'
   "400":
     description: Frame cannot be updated
   "401":

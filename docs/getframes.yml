@@ -10,19 +10,22 @@ responses:
     description: Frames were fetched successfully
     schema:
       $ref: '#/definitions/Frames'
-    
   "401":
     description: Access token is missing or invalid
 definitions:
+  FrameObject:
+    type: object
+    properties:
+      frame_id:
+        type: string
+        description: Reference Id of the frame
+      frame_data:
+        type: string
+        description: Base64 encoded data of the frame
   Frames:
     type: array
     description: Array of Frame object
     items:
       type: object
-      properties:
-        frame_id:
-          type: string
-          description: Reference Id of the frame
-        frame_data:
-          type: string
-          description: Base64 encoded data of the frame
+      $ref: '#/definitions/FrameObject'
+      

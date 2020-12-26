@@ -20,7 +20,7 @@ responses:
   "200":
     description: Frame added successfully
     schema:
-      $ref: '#/definitions/Frames'
+      $ref: '#/definitions/FrameObject'
   "400":
     description: Frame cannot be added
   "401":
