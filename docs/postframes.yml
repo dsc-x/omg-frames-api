@@ -21,5 +21,7 @@ responses:
     description: Frame added successfully
     schema:
       $ref: '#/definitions/Frames'
+  "400":
+    description: Frame cannot be added
   "401":
     description: Access token is missing or invalid

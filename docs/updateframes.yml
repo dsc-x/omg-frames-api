@@ -1,0 +1,31 @@
+Update a frame of a user
+The frame id has to be sent as a query along with the updated frame data in the request.
+---
+tags:
+  - user
+security:
+  - basicAuth: []
+parameters:
+  - in: body
+    name: body
+    required: true
+    schema:
+      required:
+        - frame_id
+        - frame_data
+      properties:
+        frame_id:
+          type: string
+          description: Id of the frame to be updated
+        frame_data:
+          type: string
+          description: Base64 encoded data of the frame
+responses:
+  "201":
+    description: Frame was updated successfully
+    schema:
+      $ref: '#/definitions/Frames'
+  "400":
+    description: Frame cannot be updated
+  "401":
+    description: Access token is missing or invalid
