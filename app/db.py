@@ -151,3 +151,15 @@ class Db:
         except Exception as e:
             print('ERROR: ', e)
             return False
+
+    @staticmethod
+    def update_frames(db, token, frame_id, frame_data):
+        user_id = decode_auth_token(token)
+        if user_id != None:
+            db.child('participants').child(user_id).child('frames').child(frame_id).remove()
+            upd_frame_id = db.child('participants').child(user_id).child('frames').push(frame_data)
+            frame = {"frame_id":upd_frame_id['name'], "frame_data":frame_data}
+            return frame
+        else:
+            print('ERROR: Token Value is None')
+            return None

@@ -36,10 +36,11 @@ def login():
         return make_response(jsonify({"message": "Login failed"})), 401
 
 
-@app.route(BASE_URL+'/frames', methods=['POST', 'GET', 'DELETE'])
+@app.route(BASE_URL+'/frames', methods=['POST', 'GET', 'DELETE', 'PUT'])
 @swag_from('../docs/getframes.yml', methods=['GET'])
 @swag_from('../docs/postframes.yml', methods=['POST'])
 @swag_from('../docs/deleteframes.yml', methods=['DELETE'])
+@swag_from('../docs/updateframes.yml', methods=['PUT'])
 def frames():
     auth_header = request.headers.get('Authorization')
     if auth_header:
@@ -68,7 +69,7 @@ def frames():
                 responseObject = {
                     'message': 'Provide valid frame data'
                 }
-                return make_response(jsonify(responseObject)), 401
+                return make_response(jsonify(responseObject)), 400
         elif request.method == 'GET':
             frames_arr = Db.get_frames(database, auth_token)
             if frames_arr != None:
@@ -78,9 +79,9 @@ def frames():
                 return make_response(jsonify(responseObject)), 201
             else:
                 responseObject = {
-                    'message': 'Something went wrong'
+                    'message': 'Frames cannot be fetched'
                 }
-                return make_response(jsonify(responseObject)), 401
+                return make_response(jsonify(responseObject)), 400
         elif request.method == 'DELETE':
             frame_id = request.args.get('id')
             if Db.delete_frames(database, auth_token, frame_id):
@@ -91,6 +92,21 @@ def frames():
             else:
                 responseObject = {
                     'message': 'Frame was not deleted!'
+                }
+                return make_response(jsonify(responseObject)), 400
+        elif request.method == 'PUT':
+            frame_id = request.json['frame_id']
+            frame_data = request.json['frame_data']
+            upd_frame = Db.update_frames(database, auth_token, frame_id, frame_data)
+            if upd_frame != None:
+                responseObject = {
+                    'message': 'Frame was updated successfully',
+                    'data': upd_frame
+                }
+                return make_response(jsonify(responseObject)), 201
+            else:
+                responseObject = {
+                    'message': 'Frame cannot be updated',
                 }
                 return make_response(jsonify(responseObject)), 400
     else:

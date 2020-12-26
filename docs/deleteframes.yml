@@ -6,6 +6,7 @@ tags:
 parameters:
   - in: query
     name: id
+    required: true
     schema:
       type: string
     description: ID of the frame to be deleted
@@ -15,7 +16,7 @@ responses:
   "201":
     description: Frame was deleted successfully
     schema:
-      $ref: '#/definitions/Frames'
+      $ref: '#/definitions/FrameObject'
   "400":
     description: Frame cannot be deleted
   "401":
