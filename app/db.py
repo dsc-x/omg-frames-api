@@ -49,6 +49,8 @@ class Db:
             user = {
                 "name": userDetails["name"],
                 "email": userDetails["email"],
+                "role": userDetails["role"],
+                "organisation": userDetails["organisation"],
                 # storing the password as hash
                 "password": pbkdf2_sha256.hash(userDetails["password"]),
                 "frames": []
@@ -85,7 +87,7 @@ class Db:
             for user_id in participants:
                 user = participants[user_id]
                 if user and (user["email"] == userDetails["email"]) and (pbkdf2_sha256.verify(userDetails["password"], user["password"])):
-                    return user_id
+                    return (user_id, user)
             return None
         except Exception as e:
             print('ERROR:', e)

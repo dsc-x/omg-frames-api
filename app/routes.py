@@ -17,21 +17,21 @@ def index():
 def register():
     user = request.json
     if not Db.check_valid_details(database, user):
-        return make_response(jsonify({"status": "fail", "message": "User details invalid"})), 409
+        return make_response(jsonify({"message": "User details invalid"})), 409
     elif Db.add_participants(database, user):
-        return make_response(jsonify({"status": "success", "message": "User added to database"})), 201
+        return make_response(jsonify({"message": "User added to database"})), 201
     else:
-        return make_response(jsonify({"status": "fail", "message": "Internal Server error"})), 500
+        return make_response(jsonify({"message": "Internal Server error"})), 500
 
 
 @app.route(BASE_URL+'/login', methods=['POST'])
 @swag_from('../docs/login.yml')
 def login():
     user = request.json
-    user_id = Db.authorise_participants(database, user)
+    user_id, user_data = Db.authorise_participants(database, user)
     user_token = Db.get_token(database, user_id)
     if (user_id != None):
-        return make_response(jsonify({"token": user_token})), 202
+        return make_response(jsonify({"token": user_token, "data": user_data})), 202
     else:
         return make_response(jsonify({"message": "Login failed"})), 401
 
@@ -39,6 +39,7 @@ def login():
 @app.route(BASE_URL+'/frames', methods=['POST', 'GET', 'DELETE'])
 @swag_from('../docs/getframes.yml', methods=['GET'])
 @swag_from('../docs/postframes.yml', methods=['POST'])
+@swag_from('../docs/deleteframes.yml', methods=['DELETE'])
 def frames():
     auth_header = request.headers.get('Authorization')
     if auth_header:
@@ -91,7 +92,7 @@ def frames():
                 responseObject = {
                     'message': 'Frame was not deleted!'
                 }
-                return make_response(jsonify(responseObject)), 401
+                return make_response(jsonify(responseObject)), 400
     else:
         responseObject = {
             'message': 'Provide a valid auth token.'
