@@ -11,6 +11,8 @@ parameters:
       required:
         - name
         - email
+        - role
+        - organisation
         - password
       properties:
         name:
@@ -19,6 +21,12 @@ parameters:
         email:
           type: string
           description: Email address of the participant
+        role:
+          type: string
+          description: Role of the user
+        organisation:
+          type: string
+          description: Organisation the user belongs to
         password:
           type: string
           description: Strong password (must have 7 characters or more)
@@ -50,11 +58,14 @@ definitions:
       email:
         type: string
         description: Email address of the participant
+      role:
+        type: string
+        description: Role of the user
+      organisation:
+        type: string
+        description: Organisation the user belongs to
       password:
         type: string
         description: Strong password (must have 7 characters or more)
       frames:
-        type: array
-        description: Base64 encoded images of the frames
-        items:
-          type: string
+        $ref: '#/definitions/Frames'

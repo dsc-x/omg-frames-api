@@ -17,28 +17,29 @@ def index():
 def register():
     user = request.json
     if not Db.check_valid_details(database, user):
-        return make_response(jsonify({"status": "fail", "message": "User details invalid"})), 409
+        return make_response(jsonify({"message": "User details invalid"})), 409
     elif Db.add_participants(database, user):
-        return make_response(jsonify({"status": "success", "message": "User added to database"})), 201
+        return make_response(jsonify({"message": "User added to database"})), 201
     else:
-        return make_response(jsonify({"status": "fail", "message": "Internal Server error"})), 500
+        return make_response(jsonify({"message": "Internal Server error"})), 500
 
 
 @app.route(BASE_URL+'/login', methods=['POST'])
 @swag_from('../docs/login.yml')
 def login():
     user = request.json
-    user_id = Db.authorise_participants(database, user)
-    user_token=Db.get_token(database, user_id)
+    user_id, user_data = Db.authorise_participants(database, user)
+    user_token = Db.get_token(database, user_id)
     if (user_id != None):
-        return make_response(jsonify({"status": "success", "token": user_token})), 202
+        return make_response(jsonify({"token": user_token, "data": user_data})), 202
     else:
-        return make_response(jsonify({"status": "fail", "message": "Login failed"})), 401
+        return make_response(jsonify({"message": "Login failed"})), 401
 
 
-@app.route(BASE_URL+'/frames', methods=['POST', 'GET'])
+@app.route(BASE_URL+'/frames', methods=['POST', 'GET', 'DELETE'])
 @swag_from('../docs/getframes.yml', methods=['GET'])
 @swag_from('../docs/postframes.yml', methods=['POST'])
+@swag_from('../docs/deleteframes.yml', methods=['DELETE'])
 def frames():
     auth_header = request.headers.get('Authorization')
     if auth_header:
@@ -46,7 +47,6 @@ def frames():
             auth_token = auth_header.split(" ")[1]
         except IndexError:
             responseObject = {
-                'status': 'fail',
                 'message': 'Bearer token malformed.'
             }
             return make_response(jsonify(responseObject)), 401
@@ -56,21 +56,16 @@ def frames():
         if request.method == 'POST':
             frame = request.json['frame']
             if frame:
-                if Db.save_frame(database, auth_token, frame):
-                    responseObject = {
-                        'status': 'success',
-                        'message': 'Frame added'
-                    }
-                    return make_response(jsonify(responseObject)), 200
+                responseObject = Db.save_frame(database, auth_token, frame)
+                if responseObject != None:
+                    return make_response(jsonify(responseObject)), 201
                 else:
                     responseObject = {
-                        'status': 'fail',
                         'message': 'Frame cannot be added'
                     }
                     return make_response(jsonify(responseObject)), 401
             else:
                 responseObject = {
-                    'status': 'fail',
                     'message': 'Provide valid frame data'
                 }
                 return make_response(jsonify(responseObject)), 401
@@ -78,19 +73,28 @@ def frames():
             frames_arr = Db.get_frames(database, auth_token)
             if frames_arr != None:
                 responseObject = {
-                    'status': 'success',
                     'frames': frames_arr
                 }
                 return make_response(jsonify(responseObject)), 201
             else:
                 responseObject = {
-                    'status': 'fail',
                     'message': 'Something went wrong'
                 }
                 return make_response(jsonify(responseObject)), 401
+        elif request.method == 'DELETE':
+            frame_id = request.args.get('id')
+            if Db.delete_frames(database, auth_token, frame_id):
+                responseObject = {
+                    'message': 'Frame was deleted successfully'
+                }
+                return make_response(jsonify(responseObject)), 201
+            else:
+                responseObject = {
+                    'message': 'Frame was not deleted!'
+                }
+                return make_response(jsonify(responseObject)), 400
     else:
         responseObject = {
-            'status': 'fail',
             'message': 'Provide a valid auth token.'
         }
         return make_response(jsonify(responseObject)), 401

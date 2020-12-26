@@ -1,0 +1,22 @@
+Delete a frame of a user
+The frame id has to be sent as a query along with the request.
+---
+tags:
+  - user
+parameters:
+  - in: query
+    name: id
+    schema:
+      type: string
+    description: ID of the frame to be deleted
+security:
+  - basicAuth: []
+responses:
+  "201":
+    description: Frame was deleted successfully
+    schema:
+      $ref: '#/definitions/Frames'
+  "400":
+    description: Frame cannot be deleted
+  "401":
+    description: Access token is missing or invalid
