@@ -11,7 +11,7 @@ template = {
     "description": "API Docs for the OMG Badge Generator. Link to the repo of the server [here](https://github.com/dsc-x/omg-frames-api). ",
     "contact": {
       "responsibleOrganization": "DSC-X",
-      "url": "https://github.com/dsc-x",
+      "url": "https://iwasat.events",
     },
     "version": "0.0.1"
   },

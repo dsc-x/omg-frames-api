@@ -59,7 +59,7 @@ class Db:
             print(' * Participant added to db')
             return True
         except Exception as e:
-            print('ERROR:', e)
+            print('ERROR: <add_participants>' , e)
             return False
 
     @staticmethod
@@ -70,6 +70,9 @@ class Db:
             assert len(userDetails["password"]) > 6
 
             participants = db.child('participants').get().val()
+            if participants == None:
+                # no participant data
+                return True
             for user_id in participants:
                 user = participants[user_id]
                 if user and (user["email"] == userDetails["email"]):
@@ -77,7 +80,7 @@ class Db:
                     return False
             return True
         except Exception as e:
-            print('ERROR:', e)
+            print('ERROR: <check_valid_details>', e)
             return False
 
     @staticmethod

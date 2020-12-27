@@ -28,10 +28,10 @@ def register():
 @swag_from('../docs/login.yml')
 def login():
     user = request.json
-    user_id, user_data = Db.authorise_participants(database, user)
-    user_token = Db.get_token(database, user_id)
-    if (user_id != None):
-        return make_response(jsonify({"token": user_token, "data": user_data})), 202
+    user_data = Db.authorise_participants(database, user)
+    if (user_data != None and user_data[0] != None):
+        user_token = Db.get_token(database, user_data[0])
+        return make_response(jsonify({"token": user_token, "data": user_data[1]})), 202
     else:
         return make_response(jsonify({"message": "Login failed"})), 401
 
