@@ -14,6 +14,7 @@ def index():
 
 
 @app.route(BASE_URL + '/send-reset-mail', methods=['POST'])
+@swag_from('../docs/sendresetmail.yml')
 def send_reset_mail():
     data = request.json
     if 'email' not in data.keys():
@@ -39,11 +40,12 @@ def send_reset_mail():
 
 
 @app.route(BASE_URL + '/update-password', methods=['POST'])
+@swag_from('../docs/updatepassword.yml')
 def update_password():
     data = request.json
     if 'token' not in data.keys() and 'password' not in data.keys():
         responseObject = {
-            'message': 'email not specified in the body'
+            'message': 'token or password is absent in the request body'
         }
         return make_response(jsonify(responseObject)), 400
     else:
