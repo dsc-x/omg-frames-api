@@ -3,6 +3,7 @@ from config import Config
 from app.db import Db
 from flasgger import Swagger
 from flask_cors import CORS
+from flask_mail import Mail
 
 template = {
   "swagger": "2.0",
@@ -19,8 +20,8 @@ template = {
     "http",
     "https"
   ],
-  'securityDefinitions': { 
-    'basicAuth': { 'type': 'apiKey', 'name': 'Authorization', 'in': 'header'}
+  'securityDefinitions': {
+    'basicAuth': {'type': 'apiKey', 'name': 'Authorization', 'in': 'header'}
   }
 }
 
@@ -28,9 +29,8 @@ template = {
 app = Flask(__name__)
 CORS(app)
 app.config.from_object(Config)
+mail = Mail(app)
 
 swagger = Swagger(app, template=template)
 
 from app import routes
-
-

@@ -1,12 +1,12 @@
-# omg-frames-api
+# IWasAt
 
 This is the backend of the [OMG Frames](https://github.com/dsc-x/omg-frames) having the register/login routes, and other related ones. 
 
 Link to the front-end repo: [omg-frames](https://github.com/dsc-x/omg-frames)
 
-Backend is running at: [http://104.236.25.178/api/v1](http://104.236.25.178/api/v1)
+Backend is running at: [https://api.iwasat.events/api/v1](https://api.iwasat.events/api/v1/)
 
-All the API endpoints are prefixed by `/api/v1` e.g `http://104.236.25.178/api/v1/login`
+All the API endpoints are prefixed by `/api/v1` e.g `https://api.iwasat.events/api/v1/login`
 
 ## Technologies used
 
@@ -18,7 +18,7 @@ All the API endpoints are prefixed by `/api/v1` e.g `http://104.236.25.178/api/v
 
 ## API Endpoints
 
-For API documentation go to [http://104.236.25.178/apidocs/](http://104.236.25.178/apidocs/).
+For API documentation go to [https://api.iwasat.events/apidocs/](https://api.iwasat.events/apidocs/).
 
 ## Development
 
@@ -51,21 +51,22 @@ This will start the local server in port 5000.
 ## Project structure
 
 ```
-    omg-frames-api
-    .
-    ├── app
-    │   ├── db.py
-    │   ├── __init__.py
-    │   └── routes.py
-    ├── config.py
-    ├── docs
-    │   ├── getframes.yml
-    │   ├── login.yml
-    │   ├── postframes.yml
-    │   └── register.yml
-    ├── README.md
-    ├── requirements.txt
-    ├── sample.env
-    └── server.py
+omg-frames-api
+├── app
+│   ├── db.py
+│   ├── __init__.py
+│   └── routes.py
+├── config.py
+├── docs
+│   ├── deleteframes.yml
+│   ├── getframes.yml
+│   ├── login.yml
+│   ├── postframes.yml
+│   ├── register.yml
+│   └── updateframes.yml
+├── README.md
+├── requirements.txt
+├── sample.env
+└── server.py
 ```
 

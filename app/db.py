@@ -1,36 +1,7 @@
-from config import Config, FirebaseConfig
+from config import FirebaseConfig
 from passlib.hash import pbkdf2_sha256
+from utils import Utils
 import pyrebase
-import jwt
-import datetime
-
-
-def encode_auth_token(user_id):
-    try:
-        payload = {
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1, minutes=0),
-            'iat': datetime.datetime.utcnow(),
-            'id': user_id
-        }
-        return jwt.encode(
-            payload,
-            Config.SECRET_KEY,
-            algorithm='HS256'
-        )
-    except Exception as e:
-        return e
-
-
-def decode_auth_token(auth_token):
-    try:
-        payload = jwt.decode(auth_token, Config.SECRET_KEY)
-        return payload['id']
-    except jwt.ExpiredSignatureError:
-        print('ERROR: Signature expired. Please log in again.')
-        return None
-    except jwt.InvalidTokenError:
-        print('ERROR: Invalid token. Please log in again.')
-        return None
 
 
 class Db:
@@ -59,7 +30,7 @@ class Db:
             print(' * Participant added to db')
             return True
         except Exception as e:
-            print('ERROR: <add_participants>' , e)
+            print('ERROR: <add_participants>', e)
             return False
 
     @staticmethod
@@ -70,7 +41,7 @@ class Db:
             assert len(userDetails["password"]) > 6
 
             participants = db.child('participants').get().val()
-            if participants == None:
+            if participants is None:
                 # no participant data
                 return True
             for user_id in participants:
@@ -99,7 +70,7 @@ class Db:
     @staticmethod
     def get_token(db, user_id):
         try:
-            token = encode_auth_token(user_id)
+            token = Utils.encode_auth_token(user_id)
             return token.decode('UTF-8')
         except Exception as e:
             print('ERROR:', e)
@@ -108,10 +79,10 @@ class Db:
     @staticmethod
     def save_frame(db, token, frame):
         try:
-            user_id = decode_auth_token(token)
-            if user_id!= None:
+            user_id = Utils.decode_auth_token(token)
+            if user_id is not None:
                 frame_id = db.child('participants').child(user_id).child('frames').push(frame)
-                frame_obj={
+                frame_obj = {
                     "frame_data": frame,
                     "frame_id": frame_id["name"]
                 }
@@ -127,12 +98,12 @@ class Db:
     @staticmethod
     def get_frames(db, token):
         try:
-            user_id = decode_auth_token(token)
-            if user_id != None:
+            user_id = Utils.decode_auth_token(token)
+            if user_id is not None:
                 frames = db.child('participants').child(user_id).child('frames').get().val()
                 frame_arr = []
-                if frames!= None:
-                    frame_arr = [{"frame_id":fid, "frame_data":frames[fid]} for fid in frames]
+                if frames is not None:
+                    frame_arr = [{"frame_id": fid, "frame_data": frames[fid]} for fid in frames]
                 return frame_arr
             else:
                 print('ERROR: Token Value is None')
@@ -144,8 +115,8 @@ class Db:
     @staticmethod
     def delete_frames(db, token, frame_id):
         try:
-            user_id = decode_auth_token(token)
-            if user_id != None:
+            user_id = Utils.decode_auth_token(token)
+            if user_id is not None:
                 db.child('participants').child(user_id).child('frames').child(frame_id).remove()
                 return True
             else:
@@ -157,12 +128,31 @@ class Db:
 
     @staticmethod
     def update_frames(db, token, frame_id, frame_data):
-        user_id = decode_auth_token(token)
-        if user_id != None:
+        user_id = Utils.decode_auth_token(token)
+        if user_id is not None:
             db.child('participants').child(user_id).child('frames').child(frame_id).remove()
             upd_frame_id = db.child('participants').child(user_id).child('frames').push(frame_data)
-            frame = {"frame_id":upd_frame_id['name'], "frame_data":frame_data}
+            frame = {"frame_id": upd_frame_id['name'], "frame_data": frame_data}
             return frame
         else:
             print('ERROR: Token Value is None')
             return None
+
+    @staticmethod
+    def check_email_address(db, email):
+        participants = db.child('participants').get().val()
+        if participants is None:
+            # No records found
+            return None
+        else:
+            for user_id in participants:
+                user = participants[user_id]
+                if user and (user["email"] == email):
+                    return user_id
+            return None
+
+    @staticmethod
+    def change_password(db, user_id, password):
+        user_details = db.child('participants').child(user_id).get().val()
+        user_details['password'] = pbkdf2_sha256.hash(password)
+        db.child('participants').child(user_id).update(user_details)

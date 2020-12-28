@@ -1,5 +1,6 @@
-from flask import request, jsonify, make_response, abort
-from app import app, Db
+from flask import request, jsonify, make_response
+from app import app, Db, mail
+from utils import Utils
 from flasgger.utils import swag_from
 
 BASE_URL = '/api/v1'
@@ -7,12 +8,64 @@ BASE_URL = '/api/v1'
 database = Db.init_db()
 
 
-@app.route(BASE_URL+'/')
+@app.route(BASE_URL + '/')
 def index():
     return make_response(jsonify({"message": "DSC Frames API"})), 201
 
 
-@app.route(BASE_URL+'/register', methods=['POST'])
+@app.route(BASE_URL + '/send-reset-mail', methods=['POST'])
+@swag_from('../docs/sendresetmail.yml')
+def send_reset_mail():
+    data = request.json
+    if 'email' not in data.keys():
+        responseObject = {
+            'message': 'email not specified in the body'
+        }
+        return make_response(jsonify(responseObject)), 400
+    else:
+        emailAddr = data['email']
+        userId = Db.check_email_address(database, emailAddr)
+        if userId is not None:
+            resetLink = f'https://iwasat.events/reset.html?token={Utils.get_reset_token(userId)}'
+            Utils.send_reset_password_mail(mail, resetLink, emailAddr)
+            responseObject = {
+                'message': 'reset link was sent to the respective email address'
+            }
+            return make_response(jsonify(responseObject)), 200
+        else:
+            responseObject = {
+                'message': 'email doesnot match'
+            }
+            return make_response(jsonify(responseObject)), 401
+
+
+@app.route(BASE_URL + '/update-password', methods=['POST'])
+@swag_from('../docs/updatepassword.yml')
+def update_password():
+    data = request.json
+    if 'token' not in data.keys() and 'password' not in data.keys():
+        responseObject = {
+            'message': 'token or password is absent in the request body'
+        }
+        return make_response(jsonify(responseObject)), 400
+    else:
+        token = data['token']
+        password = data['password']
+        userId = Utils.verify_reset_token(token)
+        if userId is None:
+            responseObject = {
+                'message': 'invalid reset token'
+            }
+            return make_response(jsonify(responseObject)), 401
+        else:
+            Db.change_password(database, userId, password)
+            responseObject = {
+                'message': 'password updated successfully'
+            }
+            return make_response(jsonify(responseObject)), 200
+
+
+@app.route(BASE_URL + '/register', methods=['POST'])
 @swag_from('../docs/register.yml')
 def register():
     user = request.json
@@ -24,19 +77,19 @@ def register():
         return make_response(jsonify({"message": "Internal Server error"})), 500
 
 
-@app.route(BASE_URL+'/login', methods=['POST'])
+@app.route(BASE_URL + '/login', methods=['POST'])
 @swag_from('../docs/login.yml')
 def login():
     user = request.json
     user_data = Db.authorise_participants(database, user)
-    if (user_data != None and user_data[0] != None):
+    if (user_data is not None and user_data[0] is not None):
         user_token = Db.get_token(database, user_data[0])
         return make_response(jsonify({"token": user_token, "data": user_data[1]})), 202
     else:
         return make_response(jsonify({"message": "Login failed"})), 401
 
 
-@app.route(BASE_URL+'/frames', methods=['POST', 'GET', 'DELETE', 'PUT'])
+@app.route(BASE_URL + '/frames', methods=['POST', 'GET', 'DELETE', 'PUT'])
 @swag_from('../docs/getframes.yml', methods=['GET'])
 @swag_from('../docs/postframes.yml', methods=['POST'])
 @swag_from('../docs/deleteframes.yml', methods=['DELETE'])
@@ -58,7 +111,7 @@ def frames():
             frame = request.json['frame']
             if frame:
                 responseObject = Db.save_frame(database, auth_token, frame)
-                if responseObject != None:
+                if responseObject is not None:
                     return make_response(jsonify(responseObject)), 201
                 else:
                     responseObject = {
@@ -72,7 +125,7 @@ def frames():
                 return make_response(jsonify(responseObject)), 400
         elif request.method == 'GET':
             frames_arr = Db.get_frames(database, auth_token)
-            if frames_arr != None:
+            if frames_arr is not None:
                 responseObject = {
                     'frames': frames_arr
                 }
@@ -98,7 +151,7 @@ def frames():
             frame_id = request.json['frame_id']
             frame_data = request.json['frame_data']
             upd_frame = Db.update_frames(database, auth_token, frame_id, frame_data)
-            if upd_frame != None:
+            if upd_frame is not None:
                 responseObject = {
                     'message': 'Frame was updated successfully',
                     'data': upd_frame

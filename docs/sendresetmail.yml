@@ -1,0 +1,25 @@
+Sending Reset Password Mail to the user
+The email provided will be checked in the database, if present then an email with reset URL link will be sent to that email address
+---
+tags:
+  - user
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      required:
+        - email
+      properties:
+        email:
+          type: string
+          description: Email of the user whose password has to be updated.
+responses:
+  "200":
+    description: Reset link was sent to the email address
+  "400":
+    description: Email is not specified in the request body
+  "401":
+    description: Email doesnot exist. Registration required
+  "500":
+    description: Internal Server Error
