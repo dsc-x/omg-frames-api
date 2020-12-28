@@ -84,7 +84,13 @@ def login():
     user_data = Db.authorise_participants(database, user)
     if (user_data is not None and user_data[0] is not None):
         user_token = Db.get_token(database, user_data[0])
-        return make_response(jsonify({"token": user_token, "data": user_data[1]})), 202
+        responseObject = {"token": user_token, 
+                        "name": user_data[1]['name'],
+                        "email": user_data[1]['email'],
+                        "role": user_data[1]['role'],
+                        "organisation": user_data[1]['organisation']
+                        }
+        return make_response(jsonify(responseObject)), 202
     else:
         return make_response(jsonify({"message": "Login failed"})), 401
 

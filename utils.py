@@ -52,10 +52,7 @@ class Utils:
 
     @staticmethod
     def send_reset_password_mail(mail, link, recipient_addr):
-        msg = Message("Send Mail Tutorial!",
-                      sender=Config.SENDER_ADDR,
-                      recipients=[recipient_addr])
-        msg.subject = 'Reset password for IWasAtEvents'
+        msg = Message("Reset password for IWasAtEvents", sender='noreply@iwasat.events', recipients=[recipient_addr])
         msg.body = 'You or someone else has requested that a new password be generated for your account. If you made this request, then please follow this link:' + link
         msg.html = render_template('reset-password.html', link=link)
         mail.send(msg)

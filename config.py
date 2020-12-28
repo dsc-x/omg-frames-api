@@ -9,8 +9,8 @@ class Config(object):
     MAIL_PASSWORD = os.getenv('MAIL_PASWORD')
     MAIL_USE_TLS = False
     MAIL_USE_SSL = True
-    SENDER_ADDR = os.getenv('SENDER_ADDR')
-
+    MAIL_DEFAULT_SENDER = 'noreply@iwasat.events'
+    
 
 FirebaseConfig = {
     "apiKey": os.getenv('FIREBASE_API_KEY'),
