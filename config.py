@@ -3,14 +3,14 @@ import os
 
 class Config(object):
     SECRET_KEY = os.getenv('SECRET_KEY') or os.urandom(24)
-    MAIL_SERVER = 'smtp.gmail.com'
+    MAIL_SERVER = 'email-smtp.us-east-1.amazonaws.com'
     MAIL_PORT = 465
     MAIL_USERNAME = os.getenv('MAIL_USERNAME')
     MAIL_PASSWORD = os.getenv('MAIL_PASWORD')
     MAIL_USE_TLS = False
     MAIL_USE_SSL = True
     MAIL_DEFAULT_SENDER = 'noreply@iwasat.events'
-    
+
 
 FirebaseConfig = {
     "apiKey": os.getenv('FIREBASE_API_KEY'),
