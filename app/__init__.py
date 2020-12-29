@@ -1,3 +1,18 @@
+"""
+  app package
+  ~~~~~~~~~~~
+
+  This package contains the main logic of the app. It initialises 
+
+  - Flask App
+  - Mail service
+  - Swagger
+
+  Modules:
+  - db
+  - routes
+"""
+
 from flask import Flask
 from config import Config
 from app.db import Db
@@ -27,10 +42,10 @@ template = {
 
 
 app = Flask(__name__)
-CORS(app)
 app.config.from_object(Config)
-mail = Mail(app)
 
+CORS(app)
+mail = Mail(app)
 swagger = Swagger(app, template=template)
 
 from app import routes
