@@ -9,7 +9,7 @@ class Db:
     db = None
 
     def __init__(self):
-        """Initilises the database 
+        """Initilises the database
 
         For more information of pyrebase https://github.com/thisbejim/Pyrebase
         """
@@ -88,7 +88,7 @@ class Db:
             participants = self.db.child('participants').get().val()
             for user_id in participants:
                 user = participants[user_id]
-                #for password we have to verify the hash
+                # for password we have to verify the hash
                 if user and (user["email"] == userDetails["email"]) and (pbkdf2_sha256.verify(userDetails["password"], user["password"])):
                     return (user_id, user)
             return None
@@ -165,7 +165,7 @@ class Db:
 
         Returns:
             bool: True is success, else False
-        """       
+        """
 
         try:
             user_id = Utils.decode_auth_token(token)
@@ -203,9 +203,9 @@ class Db:
 
     def check_email_address(self, email):
         """Check if the email address exists in the database
-        
+
         Args:
-            email: email of the user to be checked
+            email (str) : email of the user to be checked
         Returns:
             str: user_id of the corresponding email
         """
@@ -225,8 +225,8 @@ class Db:
         """Change the password of the user in the database
 
         Args:
-            user_id (string): id of the user whose password has to be updated
-            password (string): new password of the user
+            user_id (str): id of the user whose password has to be updated
+            password (str): new password of the user
         """
         user_details = self.db.child('participants').child(user_id).get().val()
         user_details['password'] = pbkdf2_sha256.hash(password)

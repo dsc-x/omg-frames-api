@@ -9,6 +9,7 @@ from flask import render_template
 class Utils:
     """Utility functions used in the app
     """
+
     @staticmethod
     def encode_auth_token(user_id):
         """JWT encodes a payload
@@ -71,10 +72,10 @@ class Utils:
         Returns:
             str: Token generated
         """
-        expires_sec=int(datetime.timedelta(days=1).total_seconds())
-        #Serializer function takes time in secs
+
+        expires_sec = int(datetime.timedelta(days=1).total_seconds())
+        # Serializer function takes time in secs
         s = Serializer(Config.SECRET_KEY, expires_sec)
-                
         return s.dumps({'user_id': user_id}).decode('utf-8')
 
     @staticmethod

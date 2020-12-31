@@ -15,6 +15,7 @@ BASE_URL = '/api/v1'
 
 database = Db()
 
+
 @app.route(BASE_URL + '/')
 def index():
     """Simple check endpoint"""

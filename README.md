@@ -22,6 +22,27 @@ For API documentation go to [https://api.iwasat.events/apidocs/](https://api.iwa
 
 ## Development
 
+### Dockerfile
+
+- Run the build command
+```bash
+make build
+```
+It will pull the docker image and install all the packages and modules.
+
+- Run the docker instance
+```bash
+make run
+```
+By default it will map to port 5000.
+
+- If you want to kill the docker instance
+```bash
+make kill
+```
+
+### Building from source
+
 - Clone the repo. 
 ```bash
 $ git clone https://github.com/dsc-x/omg-frames-api
