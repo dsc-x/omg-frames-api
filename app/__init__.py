@@ -2,7 +2,7 @@
   app package
   ~~~~~~~~~~~
 
-  This package contains the main logic of the app. It initialises 
+  This package contains the main logic of the app. It initialises
 
   - Flask App
   - Mail service
@@ -23,8 +23,8 @@ from flask_mail import Mail
 template = {
   "swagger": "2.0",
   "info": {
-    "title": "OMG Badge Generator API",
-    "description": "API Docs for the OMG Badge Generator. Link to the repo of the server [here](https://github.com/dsc-x/omg-frames-api). ",
+    "title": "iWasAt Events API",
+    "description": "API Docs for the iWasAt Events. Link to the repo of the server [here](https://github.com/dsc-x/omg-frames-api). ",
     "contact": {
       "responsibleOrganization": "DSC-X",
       "url": "https://iwasat.events",

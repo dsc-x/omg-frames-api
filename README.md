@@ -1,6 +1,6 @@
-# IWasAt
+# iWasAt
 
-This is the backend of the [OMG Frames](https://github.com/dsc-x/omg-frames) having the register/login routes, and other related ones. 
+This is the backend of the [iWasAt](https://github.com/dsc-x/omg-frames) having the register/login routes, and other related ones. 
 
 Link to the front-end repo: [omg-frames](https://github.com/dsc-x/omg-frames)
 
@@ -40,6 +40,8 @@ By default it will map to port 5000.
 ```bash
 make kill
 ```
+
+Then you can visit `http://0.0.0.0/apidocs` for the documentation
 
 ### Building from source
 
