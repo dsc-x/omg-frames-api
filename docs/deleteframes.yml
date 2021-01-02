@@ -1,4 +1,4 @@
-Delete a frame of an user
+Delete a frame of a user
 The frame id has to be sent as a query along with the request.
 ---
 tags:

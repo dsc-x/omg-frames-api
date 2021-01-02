@@ -1,4 +1,4 @@
-Add (Save) frames of an user
+Add (Save) frames of a user
 Request body should have the base64 encoded frame along with the Bearer Token, which will be verified and added to the database.
 ---
 tags:

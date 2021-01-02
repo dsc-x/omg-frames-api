@@ -105,7 +105,21 @@ class Utils:
             link (str): URL link to be embedded in the mail
             recipient_addr (str): Email of the recipient
         """
-        msg = Message("Reset password for IWasAt", sender='noreply@iwasat.events', recipients=[recipient_addr])
+        msg = Message("Reset password for iWasAt", sender='noreply@iwasat.events', recipients=[recipient_addr])
         msg.body = 'You or someone else has requested that a new password be generated for your account. If you made this request, then please follow this link:' + link
         msg.html = render_template('reset-password.html', link=link)
         mail.send(msg)
+
+    @staticmethod
+    def send_welcome_mail(mail, name, recipient_addr):
+        """Send the welcome mail
+
+        Args:
+            mail (Mail): Mail object initialized in __init__.py
+            name (str): Name of the user
+            recipient_addr (str): Email of the recipient
+        """
+        msg = Message("Welcome to iWasAt", sender='noreply@iwasat.events', recipients=[recipient_addr])
+        msg.html = render_template('welcome.html', name=name)
+        mail.send(msg)
+

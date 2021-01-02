@@ -140,6 +140,7 @@ def register():
     if not database.check_valid_details(user):
         return make_response(jsonify({"message": "User details invalid"})), 409
     elif database.add_participants(user):
+        Utils.send_welcome_mail(mail, user['name'], user['email'])
         return make_response(jsonify({"message": "User added to database"})), 201
     else:
         return make_response(jsonify({"message": "Internal Server error"})), 500
